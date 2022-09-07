@@ -6,7 +6,10 @@ from sklearn.preprocessing import LabelEncoder
 import random
 import itertools
 
-DATA = pd.read_csv('../data/6897-1y-c.csv')
+DATA = pd.read_csv('../../data/6897-1y-c.csv')
+
+### for experiment
+buy_threshold = 25 # could be 9/15/25/1(consider all)
 
 ## Preprocessing
 ### Handle Username Formats
@@ -20,6 +23,10 @@ def replace_invalid(string):
   return string
 
 DATA['聯絡電話'] = DATA['聯絡電話'].apply(replace_invalid)
+
+user_count = DATA.groupby(['聯絡電話']).count()
+uid=user_count['下單日期'].loc[user_count['下單日期'] > buy_threshold].index
+DATA = DATA.loc[DATA['聯絡電話'].isin(uid)]
 
 ### 處理 period （前六碼）
 
@@ -51,7 +58,7 @@ DATA['場次'] = DATA['場次'].fillna(DATA['下單日期'])
 
 ## Constants Needed
 
-LB_CE = [f'cat_{i}' for i in range(228)] + [f'shipment_{i}' for i in range(4)] + [f'payment_{i}' for i in range(2)]
+LB_CE = [f'cat_{i}' for i in range(226)] + [f'shipment_{i}' for i in range(4)] + [f'payment_{i}' for i in range(2)]
 USER_LIST = DATA['聯絡電話'].unique()
 STREAM_LIST = DATA['場次'].unique()
 STREAM_LIST.sort()
@@ -60,8 +67,8 @@ STREAM_LIST.sort()
 LB_PERIOD = list(DATA['period'].unique())
 LB_USER = ['user']
 LB_PQ = ['total_price', 'total_quantity']
-LB_CAT_DATA = [f'cat_{x}' for x in list(range(228))]
-LB_CAT_ITEM = [f'i_cat_{x}' for x in list(range(228))]
+LB_CAT_DATA = [f'cat_{x}' for x in list(range(226))]
+LB_CAT_ITEM = [f'i_cat_{x}' for x in list(range(226))]
 LB_SHIPMENT_PAYMENT = ['shipment_0', 'shipment_1', 'shipment_2', 'shipment_3', 'payment_0', 'payment_1']
 USER_LB = LB_PERIOD + LB_USER + LB_PQ + LB_SHIPMENT_PAYMENT
 LB_ITEMS = ['i_item_id', 'i_avg_price', 'i_count'] + LB_CAT_ITEM
