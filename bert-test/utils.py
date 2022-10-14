@@ -49,7 +49,7 @@ def get_full_state(user_all_streams, stream_list, i):
 Comparison function for reward
 '''
 def r(a, b):
-  if a==1 and b==0: return -1
+  if a==1 and b==0: return 0 # -1 when the rule is to punish unrec-bought
   else: return a & b
 
 def get_reward(user_phone, stream, action_ids):

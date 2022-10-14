@@ -9,7 +9,7 @@ import itertools
 DATA = pd.read_csv('../../data/6897-1y-c.csv')
 
 ### for experiment
-buy_threshold = 25 # could be 9/15/25/1(consider all)
+buy_threshold = 9 # could be 9/15/25/1(consider all)
 
 ## Preprocessing
 ### Handle Username Formats
